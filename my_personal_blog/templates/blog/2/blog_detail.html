@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+{% block title %}{% trans 'Blog' %}{% endblock %}
+{% block additional_css %}
+
+{% endblock %}
+{% block content %}
+
+  <div class="container">
+    <div class="row">
+      <main class="col-md-12">
+
+
+        <article>
+          <h2>{{ post.title }}</h2>
+{#          <img src="{{ post.image.url }}" style="width: 300px; height: auto;" alt="{{ post.title }}">#}
+          <p>{{ post.content|safe }}</p>
+        </article>
+
+
+      </main>
+    </div>
+  </div>
+
+
+
+{% endblock %}

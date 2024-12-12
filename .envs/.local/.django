@@ -1,0 +1,27 @@
+# General
+# ------------------------------------------------------------------------------
+DJANGO_SECRET_KEY=8dIfgl361gIPUGeUAxDcyCAB1BBEZB3xcsMqaxxMy0ncrbVeBCIILXiP0V21bX7I
+DJANGO_ALLOWED_HOSTS=localhost,0.0.0.0,127.0.0.1
+DJANGO_DEBUG=True
+# Security
+# ------------------------------------------------------------------------------
+
+# django-allauth
+# ------------------------------------------------------------------------------
+DJANGO_ACCOUNT_ALLOW_REGISTRATION=True
+
+# secure-hsts-preload
+# ------------------------------------------------------------------------------
+DJANGO_SECURE_HSTS_PRELOAD=True
+# Gunicorn
+# ------------------------------------------------------------------------------
+WEB_CONCURRENCY=4
+
+
+# Celery Broker URL
+# ------------------------------------------------------------------------------
+CELERY_BROKER_URL=redis://localhost:6379/0
+
+# Redis
+# ------------------------------------------------------------------------------
+REDIS_URL=redis://redis:6379/0

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+{% block title %}{% trans 'Blog' %}{% endblock %}
+{% block additional_css %}
+
+{% endblock %}
+{% block content %}
+
+  <div class="container">
+    <div class="row">
+
+      <main class="col-md-12">
+        {% for post in posts %}
+          <article class="post post-{{ forloop.counter }}">
+            <header class="entry-header">
+              <h1 class="entry-title">
+                <a href="{%  url 'blogs:detail' post.slug %}">{{ post.title }}</a>
+              </h1>
+              <div class="entry-meta">
+                <span class="post-category"><a href="#">{{ post.category.name }}</a></span>
+
+
+                <span class="comments-link"><a href="#"><time class="entry-date"
+                                                              datetime="2012-11-09T23:15:57+00:00">{{ post.created_at }}</time></a></span>
+
+              </div>
+            </header>
+            <div class="entry-content clearfix">
+              <p>{{ post.content|safe|truncatewords:40 }}</p>
+              <div class="read-more cl-effect-14">
+                <a href="{%  url 'blogs:detail' post.slug %}" class="more-link">Continue reading <span class="meta-nav">→</span></a>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+
+
+      </main>
+    </div>
+  </div>
+
+
+
+{% endblock %}

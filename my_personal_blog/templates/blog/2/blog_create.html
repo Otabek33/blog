@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+{% block title %}{% trans 'Blog' %}{% endblock %}
+{% block additional_css %}
+
+{% endblock %}
+{% block content %}
+
+  <div class="container">
+    <div class="row">
+      <main class="col-md-12">
+
+
+        <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ form.title.label_tag }}
+        {{ form.title }}
+    </div>
+    <div class="form-group">
+        {{ form.slug.label_tag }}
+        {{ form.slug }}
+    </div>
+    <div class="form-group">
+        {{ form.content.label_tag }}
+        {{ form.content }}
+    </div>
+    <div class="form-group">
+        {{ form.image.label_tag }}
+        {{ form.image }}
+    </div>
+    <div class="form-group">
+        {{ form.category.label_tag }}
+        {{ form.category }}
+    </div>
+    <div class="form-group">
+        {{ form.tags.label_tag }}
+        {{ form.tags }}
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+
+      </main>
+    </div>
+  </div>
+
+
+
+{% endblock %}

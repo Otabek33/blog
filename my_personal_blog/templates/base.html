@@ -1,0 +1,115 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fintechdev</title>
+
+  <!-- meta -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{% block title %}{% trans 'Blog' %}{% endblock %}</title>
+  <!-- css -->
+
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pace.css' %}">
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+
+  <!-- js -->
+
+
+
+  <script src="{% static 'js/jquery-2.1.3.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/pace.min.js' %}"></script>
+  <script src="{% static 'js/modernizr.custom.js' %}"></script>
+<style>
+  html {
+    height: 100%;
+}
+#site-footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    background-color: #f6f6f6;
+    padding: 10px 0;
+}
+</style>
+  {% block additional_css %}{% endblock %}
+</head>
+
+<body>
+{% block navbar %}
+  {% include "_includes/navbar.html" %}
+{% endblock %}
+<div class="content-body">
+  {% block content %}
+
+
+
+  {% endblock %}
+
+</div>
+{% block footer %}
+  {% include "_includes/footer.html" %}
+{% endblock %}
+
+<!-- Mobile Menu -->
+<div class="overlay overlay-hugeinc">
+  <button type="button" class="overlay-close"><span class="ion-ios-close-empty"></span></button>
+  <nav>
+    <ul>
+      <li><a href="{% url 'users:main_blog' %}">Home</a></li>
+      <li><a href="{% url 'blogs:list' %}">Blog</a></li>
+      <li><a href="{% url 'users:about' %}">Me</a></li>
+
+    </ul>
+  </nav>
+</div>
+<script src="{% static 'js/script.js' %}"></script>
+<script>
+  function getCsrfToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  }
+</script>
+
+<script>
+  // Dynamically update the year
+  document.addEventListener('DOMContentLoaded', () => {
+    const currentYearElement = document.getElementById('currentYear');
+    currentYearElement.textContent = new Date().getFullYear();
+  });
+
+
+
+
+
+
+</script>
+<script type="text/javascript">
+    // Function to get CSRF token from cookies
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Optionally, use this for testing or further integration:
+    console.log("CSRF Token: ", getCookie('csrftoken'));
+</script>
+{% block additional_js %}{% endblock %}
+</body>
+</html>
