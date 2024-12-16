@@ -6,7 +6,7 @@ whitenoise==6.8.2  # https://github.com/evansd/whitenoise
 redis==5.2.1  # https://github.com/redis/redis-py
 celery==5.4.0  # pyup: < 6.0  # https://github.com/celery/celery
 django-celery-beat==2.7.0  # https://github.com/celery/django-celery-beat
-uvicorn[standard]==0.32.1  # https://github.com/encode/uvicorn
+uvicorn[standard]==0.34.0  # https://github.com/encode/uvicorn
 uvicorn-worker==0.2.0  # https://github.com/Kludex/uvicorn-worker
 
 # Django
