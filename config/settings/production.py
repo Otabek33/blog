@@ -77,18 +77,7 @@ STORAGES = {
 # EMAIL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
-DEFAULT_FROM_EMAIL = env(
-    "DJANGO_DEFAULT_FROM_EMAIL",
-    default="my personal blog <noreply@fintechdev.uz>",
-)
-# https://docs.djangoproject.com/en/dev/ref/settings/#server-email
-SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
-# https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
-EMAIL_SUBJECT_PREFIX = env(
-    "DJANGO_EMAIL_SUBJECT_PREFIX",
-    default="[my personal blog] ",
-)
-ACCOUNT_EMAIL_SUBJECT_PREFIX = EMAIL_SUBJECT_PREFIX
+
 
 # ADMIN
 # ------------------------------------------------------------------------------
@@ -98,12 +87,11 @@ ADMIN_URL = env("DJANGO_ADMIN_URL")
 # Anymail
 # ------------------------------------------------------------------------------
 # https://anymail.readthedocs.io/en/stable/installation/#installing-anymail
-INSTALLED_APPS += ["anymail"]
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 # https://anymail.readthedocs.io/en/stable/installation/#anymail-settings-reference
 # https://anymail.readthedocs.io/en/stable/esps
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-ANYMAIL = {}
+
 
 # django-compressor
 # ------------------------------------------------------------------------------
@@ -162,7 +150,7 @@ LOGGING = {
         },
         "django.security.DisallowedHost": {
             "level": "ERROR",
-            "handlers": ["console", "mail_admins"],
+            "handlers": ["console"],
             "propagate": True,
         },
     },
@@ -171,8 +159,6 @@ LOGGING = {
 # django-rest-framework
 # -------------------------------------------------------------------------------
 # Tools that generate code samples can use SERVERS to point to the correct domain
-SPECTACULAR_SETTINGS["SERVERS"] = [
-    {"url": "https://fintechdev.uz", "description": "Production server"},
-]
+
 # Your stuff...
 # ------------------------------------------------------------------------------
