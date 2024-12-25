@@ -60,11 +60,11 @@ class CategoryFilterShowView(View):
     def post(self, request, *args, **kwargs):
         if is_ajax(request):
             category = get_object_or_404(Category, pk=self.kwargs["pk"])
-            posts = Post.objects.filter(category=category.id)
-            serialized_posts = serialize('json', posts)
-            posts_data = json.loads(serialized_posts)
-            cleaned_posts = [post['fields'] for post in posts_data]
-            return JsonResponse({'posts': cleaned_posts}, safe=False)
+            posts = Post.objects.filter(category=category.id).values(
+                'id', 'title', 'slug', 'content', 'created_at', 'category__name'
+            )
+            posts_list = list(posts)
+            return JsonResponse({'posts': posts_list}, safe=False)
         return JsonResponse({"success": False, "error": "Not an AJAX request"})
 
 
