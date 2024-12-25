@@ -7,26 +7,26 @@
 {% block content %}
   <div class="container">
     <div class="row">
-      <main class="col-md-8">
+      <main id="post-list" class="col-md-8">
         {% for post in posts %}
           <article class="post post-{{ forloop.counter }}">
             <header class="entry-header">
+
               <h1 class="entry-title">
                 <a href="{% url 'blogs:detail' post.slug %}">{{ post.title }}</a>
               </h1>
               <div class="entry-meta">
                 <span class="post-category"><a href="#">{{ post.category.name }}</a></span>
-
-
-                <span class="comments-link"><a href="#"><time class="entry-date"
-                                                              datetime="2012-11-09T23:15:57+00:00">{{ post.created_at }}</time></a></span>
-
+                <span class="comments-link">
+          <a href="#"><time class="entry-date"
+                            datetime="{{ post.created_at|date:'c' }}">{{ post.created_at }}</time></a>
+        </span>
               </div>
             </header>
             <div class="entry-content clearfix">
               <p>{{ post.content|safe|truncatewords:40 }}</p>
               <div class="read-more cl-effect-14">
-                <a href="{% url 'blogs:detail' post.slug %}" class="more-link">Continue reading <span
+                <a href="{% url 'blogs:detail' post.slug %}" class="more-link"><span
                   class="meta-nav">→</span></a>
               </div>
             </div>
@@ -60,9 +60,10 @@
           <h3 class="widget-title">Category</h3>
           <ul>
             {% for category in category_list %}
-            <li>
-              <a href="#">{{ category.name }}</a>
-            </li>
+              <li>
+                <a href="#" class="category-link"
+                   data-href-template="{% url 'blogs:category_filter' category.id %}">{{ category.name }}</a>
+              </li>
             {% endfor %}
 
           </ul>
@@ -70,6 +71,75 @@
       </aside>
     </div>
   </div>
+
+
+{% endblock %}
+{% block additional_js %}
+
+  <script>
+    // Add event listeners to category links
+    document.querySelectorAll('.category-link').forEach(link => {
+      link.addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent the default anchor behavior
+
+        const url = this.getAttribute('data-href-template');
+
+        // Send the category ID to the backend using Fetch API
+        $.ajax({
+          url: url,
+          method: 'POST',
+          headers: {
+            "X-CSRFToken": getCsrfToken()
+          },
+          success: function (response) {
+            const data = response.posts
+              console.log(data)
+
+
+            const postList = document.getElementById('post-list');
+            postList.innerHTML = ''; // Clear existing posts
+
+            data.forEach((post, index) => {
+              const postElement = `
+      <article class="post post-${index + 1}">
+        <header class="entry-header">
+          <h1 class="entry-title">
+            <a href="/blogs/${post.slug}/">${post.title}</a>
+          </h1>
+          <div class="entry-meta">
+            <span class="post-category"><a href="#">${post.category_name}</a></span>
+            <span class="comments-link">
+              <a href="#"><time class="entry-date" datetime="${post.created_at}">${post.created_at}</time></a>
+            </span>
+          </div>
+        </header>
+        <div class="entry-content clearfix">
+          <p>${post.content.slice(0, 150)}...</p>
+          <div class="read-more cl-effect-14">
+            <a href="/blogs/${post.slug}/" class="more-link"><span class="meta-nav">→</span></a>
+          </div>
+        </div>
+      </article>
+    `;
+              postList.insertAdjacentHTML('beforeend', postElement);
+            });
+
+
+          },
+          error: function (response) {
+            var error_message = response["responseJSON"]["error"];
+
+          }
+        });
+
+
+
+
+    });})
+  </script>
+
+
+
 
 
 {% endblock %}

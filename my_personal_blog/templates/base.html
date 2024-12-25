@@ -90,26 +90,7 @@
 
 
 </script>
-<script type="text/javascript">
-    // Function to get CSRF token from cookies
-    function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie != '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 
-    // Optionally, use this for testing or further integration:
-    console.log("CSRF Token: ", getCookie('csrftoken'));
-</script>
 {% block additional_js %}{% endblock %}
 </body>
 </html>

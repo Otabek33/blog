@@ -1,11 +1,17 @@
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView, CreateView
-from django.views.generic.detail import DetailView
+import json
 
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView, CreateView, View
+from django.views.generic.detail import DetailView
+from django.core.serializers import serialize
 from my_personal_blog.apps.blogs.forms import PostForm
-from my_personal_blog.apps.blogs.models import Post
+from my_personal_blog.apps.blogs.models import Post, Category
 from django.core.files.storage import default_storage
+from django.utils.translation import gettext_lazy as _
+
+from my_personal_blog.apps.utils.general_utils import is_ajax
 
 
 # Create your views here.
@@ -48,3 +54,18 @@ def admin_upload_image(request):
             file_url = default_storage.url(file_name)  # Get the file URL
             return JsonResponse({'location': file_url})  # TinyMCE expects 'location'
     return JsonResponse({'error': 'Upload failed'}, status=400)
+
+
+class CategoryFilterShowView(View):
+    def post(self, request, *args, **kwargs):
+        if is_ajax(request):
+            category = get_object_or_404(Category, pk=self.kwargs["pk"])
+            posts = Post.objects.filter(category=category.id)
+            serialized_posts = serialize('json', posts)
+            posts_data = json.loads(serialized_posts)
+            cleaned_posts = [post['fields'] for post in posts_data]
+            return JsonResponse({'posts': cleaned_posts}, safe=False)
+        return JsonResponse({"success": False, "error": "Not an AJAX request"})
+
+
+category_filter = CategoryFilterShowView.as_view()
