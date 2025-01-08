@@ -8,7 +8,7 @@
   <div class="container">
     <div class="row">
       <main id="post-list" class="col-md-8">
-        {% for post in posts %}
+        {% for post in object_list  %}
           <article class="post post-{{ forloop.counter }}">
             <header class="entry-header">
 
@@ -32,12 +32,34 @@
             </div>
           </article>
         {% endfor %}
+      {% if paginator.num_pages > 1 %}
+        <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">First</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+                <span class="active">{{ num }}</span>
+            {% else %}
+                <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+    </div>
+      {% endif %}
+
       </main>
       <aside class="col-md-4">
         <div class="widget widget-recent-posts">
           <h3 class="widget-title">Recent Posts</h3>
           <ul>
-            {% for post in posts %}
+            {% for post in object_list %}
               <li>
                 <a href="{% url 'blogs:detail' post.slug %}">{{ post.title }}</a>
               </li>

@@ -4,7 +4,7 @@ from datetime import datetime
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView, CreateView, View
+from django.views.generic import TemplateView, CreateView, View, ListView
 from django.views.generic.detail import DetailView
 from django.core.serializers import serialize
 from my_personal_blog.apps.blogs.forms import PostForm
@@ -16,14 +16,12 @@ from my_personal_blog.apps.utils.general_utils import is_ajax
 
 
 # Create your views here.
-class BlogListView(TemplateView):
+class BlogListView(ListView):
+    model = Post
     template_name = "blog/blog/blog_list.html"
+    paginate_by = 10
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        posts = Post.objects.all()
-        context["posts"] = posts
-        return context
+
 
 
 blog_list = BlogListView.as_view()

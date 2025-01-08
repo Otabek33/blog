@@ -4,7 +4,7 @@ from django.db.models import QuerySet
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView, TemplateView
+from django.views.generic import DetailView, TemplateView, ListView
 from django.views.generic import RedirectView
 from django.views.generic import UpdateView
 
@@ -48,15 +48,16 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 user_redirect_view = UserRedirectView.as_view()
 
 
-class MainBlogView(TemplateView):
+class MainBlogView(ListView):
+    model = Post
     template_name = "blog/1/main_page.html"
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         posts = Post.objects.all()
         category = Category.objects.all()
         months_years = posts.dates('created_at', 'month', order='DESC')
-        context["posts"] = posts
         context["the_last_post_list"] = Post.objects.all().order_by('-created_at')[:3]
         context['months_years'] = months_years
         context['category_list'] = category

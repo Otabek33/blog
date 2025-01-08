@@ -10,29 +10,51 @@
     <div class="row">
 
       <main class="col-md-12">
-        {% for post in posts %}
+        {% for post in object_list  %}
           <article class="post post-{{ forloop.counter }}">
             <header class="entry-header">
+
               <h1 class="entry-title">
-                <a href="{%  url 'blogs:detail' post.slug %}">{{ post.title }}</a>
+                <a href="{% url 'blogs:detail' post.slug %}">{{ post.title }}</a>
               </h1>
               <div class="entry-meta">
                 <span class="post-category"><a href="#">{{ post.category.name }}</a></span>
-
-
-                <span class="comments-link"><a href="#"><time class="entry-date"
-                                                              datetime="2012-11-09T23:15:57+00:00">{{ post.created_at }}</time></a></span>
-
+                <span class="comments-link">
+          <a href="#"><time class="entry-date"
+                            datetime="{{ post.created_at|date:'c' }}">{{ post.created_at }}</time></a>
+        </span>
               </div>
             </header>
             <div class="entry-content clearfix">
               <p>{{ post.content|safe|truncatewords:40 }}</p>
               <div class="read-more cl-effect-14">
-                <a href="{%  url 'blogs:detail' post.slug %}" class="more-link"><span class="meta-nav">→</span></a>
+                <a href="{% url 'blogs:detail' post.slug %}" class="more-link"><span
+                  class="meta-nav">→</span></a>
               </div>
             </div>
           </article>
         {% endfor %}
+      {% if paginator.num_pages > 1 %}
+        <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">First</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+                <span class="active">{{ num }}</span>
+            {% else %}
+                <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+    </div>
+      {% endif %}
 
 
       </main>
