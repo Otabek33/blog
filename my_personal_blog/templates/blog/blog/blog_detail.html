@@ -12,6 +12,12 @@
 
 
         <article>
+           <div class="entry-content clearfix">
+
+              <div class="read-more cl-effect-14">
+                <a href="{%  url 'users:main_blog'  %}" class="more-link"><span class="meta-nav">←</span></a>
+              </div>
+            </div>
           <h2>{{ post.title }}</h2>
 {#          <img src="{{ post.image.url }}" style="width: 300px; height: auto;" alt="{{ post.title }}">#}
           <p>{{ post.content|safe }}</p>

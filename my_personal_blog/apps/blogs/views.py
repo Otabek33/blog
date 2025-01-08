@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -16,7 +17,7 @@ from my_personal_blog.apps.utils.general_utils import is_ajax
 
 # Create your views here.
 class BlogListView(TemplateView):
-    template_name = "blog/2/blog_list.html"
+    template_name = "blog/blog/blog_list.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -30,7 +31,7 @@ blog_list = BlogListView.as_view()
 
 class BlogDetailView(DetailView):
     model = Post
-    template_name = "blog/2/blog_detail.html"
+    template_name = "blog/blog/blog_detail.html"
 
 
 blog_detail = BlogDetailView.as_view()
@@ -69,3 +70,22 @@ class CategoryFilterShowView(View):
 
 
 category_filter = CategoryFilterShowView.as_view()
+
+
+class DataFilterShowView(View):
+    def post(self, request, *args, **kwargs):
+        if is_ajax(request):
+            data = json.loads(request.body)
+            date_string = data.get('month')
+            date_object = datetime.strptime(date_string, "%b. %d, %Y")
+
+            posts = Post.objects.filter(created_at__year=date_object.year,
+                                        created_at__month=date_object.month).values(
+                'id', 'title', 'slug', 'content', 'created_at', 'category__name'
+            )
+            posts_list = list(posts)
+            return JsonResponse({'posts': posts_list}, safe=False)
+        return JsonResponse({"success": False, "error": "Not an AJAX request"})
+
+
+post_data_filter = DataFilterShowView.as_view()

@@ -50,7 +50,9 @@
           <ul>
             {% for month in months_years %}
               <li>
-                <a href="#">{{ month|date:"F Y" }}</a>
+                <a href="#" class="data-link"
+                   data-href-template="{% url 'blogs:month_filter' %}"
+                   data-store-id="{{ month }}">{{ month|date:"F Y" }}</a>
               </li>
             {% endfor %}
           </ul>
@@ -78,13 +80,21 @@
 
   <script>
     // Add event listeners to category links
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      return date.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+      }).replace('AM', 'a.m.').replace('PM', 'p.m.');
+    };
     document.querySelectorAll('.category-link').forEach(link => {
       link.addEventListener('click', function (event) {
-        event.preventDefault(); // Prevent the default anchor behavior
-
+        event.preventDefault();
         const url = this.getAttribute('data-href-template');
-
-        // Send the category ID to the backend using Fetch API
         $.ajax({
           url: url,
           method: 'POST',
@@ -93,7 +103,7 @@
           },
           success: function (response) {
             const data = response.posts
-              console.log(data)
+            console.log(data)
 
 
             const postList = document.getElementById('post-list');
@@ -109,12 +119,12 @@
           <div class="entry-meta">
             <span class="post-category"><a href="#">${post.category__name}</a></span>
             <span class="comments-link">
-              <a href="#"><time class="entry-date" datetime="${post.created_at}">${post.created_at}</time></a>
+              <a href="#"><time class="entry-date" datetime="${post.created_at}">${formatDate(post.created_at)}</time></a>
             </span>
           </div>
         </header>
         <div class="entry-content clearfix">
-          <p>${post.content.slice(0, 150)}...</p>
+          <p>${post.content.slice(0, 200)}...</p>
           <div class="read-more cl-effect-14">
             <a href="/blogs/${post.slug}/" class="more-link"><span class="meta-nav">→</span></a>
           </div>
@@ -131,11 +141,62 @@
 
           }
         });
+      });
+    })
+
+    document.querySelectorAll('.data-link').forEach(link => {
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+        const url = this.getAttribute('data-href-template');
+        const data = {month: this.getAttribute('data-store-id')};
+        console.log(data)
+
+        $.ajax({
+          url: url,
+          method: 'POST',
+          data: JSON.stringify(data),
+          headers: {
+            "X-CSRFToken": getCsrfToken()
+          },
+          success: function (response) {
+            const data = response.posts
+            const postList = document.getElementById('post-list');
+            postList.innerHTML = '';
+
+            data.forEach((post, index) => {
+              const postElement = `
+      <article class="post post-${index + 1}">
+        <header class="entry-header">
+          <h1 class="entry-title">
+            <a href="/blogs/${post.slug}/">${post.title}</a>
+          </h1>
+          <div class="entry-meta">
+            <span class="post-category"><a href="#">${post.category__name}</a></span>
+            <span class="comments-link">
+              <a href="#"><time class="entry-date" datetime="${post.created_at}">${formatDate(post.created_at)}</time></a>
+            </span>
+          </div>
+        </header>
+        <div class="entry-content clearfix">
+          <p>${post.content.slice(0, 200)}...</p>
+          <div class="read-more cl-effect-14">
+            <a href="/blogs/${post.slug}/" class="more-link"><span class="meta-nav">→</span></a>
+          </div>
+        </div>
+      </article>
+    `;
+              postList.insertAdjacentHTML('beforeend', postElement);
+            });
 
 
+          },
+          error: function (response) {
+            var error_message = response["responseJSON"]["error"];
 
-
-    });})
+          }
+        });
+      });
+    })
   </script>
 
 
