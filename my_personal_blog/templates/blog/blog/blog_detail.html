@@ -2,31 +2,49 @@
 {% load static i18n %}
 {% block title %}{% trans 'Blog' %}{% endblock %}
 {% block additional_css %}
+<style>
+.centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* If vertical centering is also needed */
+  flex-direction: column;
+  width: 100%;
+}
 
+.centered-content {
+  max-width: 600px; /* Adjust as needed */
+  width: 100%;
+  text-align: justify;
+}
+
+</style>
 {% endblock %}
 {% block content %}
 
-  <div class="container" style="width: 40%; text-align: justify">
-    <div class="row">
-      <main class="col-md-12">
+<div class="centered-container">
+  <div class="centered-content">
+        <div class="row">
+          <main class="col-md-12">
 
 
-        <article>
-           <div class="entry-content clearfix">
+            <article>
+              <div class="entry-content clearfix">
 
-              <div class="read-more cl-effect-14">
-                <a href="{%  url 'users:main_blog'  %}" class="more-link"><span class="meta-nav">←</span></a>
+                <div class="read-more cl-effect-14">
+                  <a href="{% url 'users:main_blog' %}" class="more-link"><span class="meta-nav">←</span></a>
+                </div>
               </div>
-            </div>
-          <h2>{{ post.title }}</h2>
-{#          <img src="{{ post.image.url }}" style="width: 300px; height: auto;" alt="{{ post.title }}">#}
-          <p style="font-family: Arial,sans-serif">{{ post.content|safe }}</p>
-        </article>
+              <h2>{{ post.title }}</h2>
+              {#          <img src="{{ post.image.url }}" style="width: 300px; height: auto;" alt="{{ post.title }}">#}
+              <p style="font-family: Arial,sans-serif">{{ post.content|safe }}</p>
+            </article>
 
 
-      </main>
+          </main>
+        </div>
+      </div>
     </div>
-  </div>
+
 
 
 
